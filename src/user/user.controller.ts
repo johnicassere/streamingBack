@@ -1,8 +1,11 @@
-import { Controller, Body, Post, Get, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Body, Post, Get, Param, Delete, Patch, UseGuards } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import AuthUser from 'src/auth/auth-user.decorator';
+
 
 @Controller('user')
 export class UserController {
@@ -24,8 +27,14 @@ export class UserController {
     findUnique(@Param('id') id: string): Promise<User>{
         return this.service.findUnique(id);
     }
+    @UseGuards(AuthGuard('jwt'))
     @Delete('delete/:id')
     delete(@Param('id') id: string): Promise<{message: string}>{
         return this.service.delete(id);
+    }
+
+    @Patch('addList/:id')
+    addList(@AuthUser() user: User, @Param('id') filmeid: string){
+        return this.service.addList(user, filmeid);
     }
 }

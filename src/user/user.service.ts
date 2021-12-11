@@ -1,5 +1,5 @@
 import { Injectable, ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { User} from '@prisma/client';
+import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -32,7 +32,6 @@ export class UserService {
             },
         });
         delete user.senha;
-        //delete user.confirmacaoSenha;
         return user;
     }
     async update(id: string, dados: UpdateUserDto): Promise<User> {
@@ -77,5 +76,30 @@ export class UserService {
         }
         return { message: 'Id foi encontrado e deletado com sucesso',}
     };
+
+   async addList(user: User, filmeid: string) {
+        const filme = await this.banco.filme.findUnique({
+            where: { id: filmeid },
+        })
+
+        if(!filme){
+            throw new NotFoundException('Filme nao encontrado');
+        }
+        const usuario = await this.banco.user.update({
+            where: { id: user.id },
+            data: {
+              movie: {
+                  connect: {
+                      id: filme.id,
+                  },
+              },  
+            },
+            include: {
+                movie: true,
+            },
+        });
+        delete usuario.senha;
+        return usuario;
+    }
 
 }

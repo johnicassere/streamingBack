@@ -16,4 +16,17 @@ model User {
   confirmacaoSenha String
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  movie            Filme[]
+}
+
+model Filme {
+  id          String   @id @default(uuid())
+  nomeFilme   String   @unique
+  generoFilme String
+  lancamento  String
+  linkImagem  String
+  assistido   Boolean     
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  usuarios    User[]
 }

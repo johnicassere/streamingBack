@@ -1,4 +1,27 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateFilmeDto } from './create-filme.dto';
+import { IsString, IsNotEmpty, IsBoolean } from "class-validator";
 
-export class UpdateFilmeDto extends PartialType(CreateFilmeDto) {}
+export class UpdateFilmeDto {
+
+    @IsString()
+    @IsNotEmpty()
+    nomeFilme: string;
+
+    @IsString()
+    @IsNotEmpty()
+    generoFilme: string;
+
+    @IsString()
+    @IsNotEmpty()
+    lancamento: string;
+
+    @IsString()
+    @IsNotEmpty()
+    linkImagem: string;
+}
+
+export class AssistidoDto {
+    
+    @IsBoolean()
+    assistido: boolean;
+   
+}
